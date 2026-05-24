@@ -693,6 +693,42 @@ body {
   letter-spacing: 0.04em;
 }
 
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.view-tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(234, 228, 217, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.view-tab {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.view-tab:hover { color: var(--text-2); }
+
+.view-tab--active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
 .period-tabs {
   display: flex;
   gap: 2px;

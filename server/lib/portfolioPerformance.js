@@ -1,6 +1,7 @@
 'use strict';
 
-const yahooFinance = require('yahoo-finance2').default;
+const YahooFinance = require('yahoo-finance2').default;
+const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
 
 const PERIOD_LABELS = ['1W', '1M', '6M', '1Y', '3Y', '5Y', '10Y', 'YTD', 'ALL'];
 
@@ -22,9 +23,11 @@ function periodStartDate(period, firstTradeDateStr) {
 
 async function fetchHistory(ticker, fromStr, toStr, interval) {
   try {
-    const rows = await yahooFinance.historical(ticker, {
-      period1: fromStr, period2: toStr, interval,
-    });
+    const rows = await yahooFinance.historical(
+      ticker,
+      { period1: fromStr, period2: toStr, interval },
+      { validateResult: false },
+    );
     return rows || [];
   } catch {
     return [];
@@ -119,7 +122,18 @@ async function getPortfolioPerformance(transactions, period) {
   const tFilled = {};
   for (const t of tickers) tFilled[t] = forwardFill(chartDates, tickerMap[t]);
 
-  // Calculate portfolio GBP value on each date
+  // Helper: convert a native Yahoo Finance price to GBP
+  function toGbp(nativePrice, ticker, cur, d) {
+    if (ticker.endsWith('.L') || (cur === 'GBP' && nativePrice > 500)) {
+      return nativePrice / 100; // GBp (pence) → GBP
+    }
+    if (cur === 'USD') return nativePrice / (gbpUsd[d] || 1.27);
+    if (cur === 'EUR') return nativePrice / (gbpEur[d] || 1.17);
+    return nativePrice;
+  }
+
+  // Absolute portfolio value: evolving holdings including cash deposits
+  // (used for the £ Value chart)
   const portValues = {};
   for (const d of chartDates) {
     if (d < portStartStr) continue;
@@ -129,43 +143,101 @@ async function getPortfolioPerformance(transactions, period) {
       if (shares <= 0.0001) continue;
       const nativePrice = tFilled[ticker]?.[d];
       if (nativePrice == null) continue;
-
-      const cur = txCurrency[ticker] || 'GBP';
-      let priceGbp;
-      // Yahoo Finance returns UK stocks in GBp (pence)
-      if (ticker.endsWith('.L') || (cur === 'GBP' && nativePrice > 500)) {
-        priceGbp = nativePrice / 100;
-      } else if (cur === 'USD') {
-        priceGbp = nativePrice / (gbpUsd[d] || 1.27);
-      } else if (cur === 'EUR') {
-        priceGbp = nativePrice / (gbpEur[d] || 1.17);
-      } else {
-        priceGbp = nativePrice;
-      }
-      val += shares * priceGbp;
+      val += shares * toGbp(nativePrice, ticker, txCurrency[ticker] || 'GBP', d);
     }
     if (val > 0) portValues[d] = val;
   }
 
-  // Anchor: first date where we have all three series
-  const anchor = chartDates.find(d => portValues[d] != null && sp500[d] != null && ftse[d] != null);
-  if (!anchor) return { series: [], period };
+  // Return series: CURRENT holdings at fixed share counts, cash-flow neutral
+  // (used for the % Return chart — comparable to benchmark indices)
+  const currentHoldings = holdingsAt(sortedTx, todayStr);
 
-  const basePort  = portValues[anchor];
-  const baseSp500 = sp500[anchor];
-  const baseFtse  = ftse[anchor];
+  // First pass — rough values to locate the anchor date
+  const roughValues = {};
+  for (const d of chartDates) {
+    let val = 0;
+    for (const [ticker, shares] of Object.entries(currentHoldings)) {
+      if (shares <= 0.0001) continue;
+      const nativePrice = tFilled[ticker]?.[d];
+      if (nativePrice == null) continue;
+      val += shares * toGbp(nativePrice, ticker, txCurrency[ticker] || 'GBP', d);
+    }
+    if (val > 0) roughValues[d] = val;
+  }
+
+  // Anchor: first date where we have some holdings value + both benchmarks
+  const anchor = chartDates.find(d => roughValues[d] != null && sp500[d] != null && ftse[d] != null);
+  if (!anchor) return { series: [], valueSeries: [], period };
+
+  // Stable basket: only holdings that had prices on the anchor date.
+  // This prevents artificial jumps when stocks IPO'd mid-period (e.g. UMG.AS in Sep 2021).
+  const anchorBasket = Object.fromEntries(
+    Object.entries(currentHoldings).filter(
+      ([ticker, shares]) => shares > 0.0001 && tFilled[ticker]?.[anchor] != null,
+    ),
+  );
+
+  // Second pass — recompute using only the stable basket
+  const holdingsValues = {};
+  for (const d of chartDates) {
+    let val = 0;
+    for (const [ticker, shares] of Object.entries(anchorBasket)) {
+      const nativePrice = tFilled[ticker]?.[d];
+      if (nativePrice == null) continue;
+      val += shares * toGbp(nativePrice, ticker, txCurrency[ticker] || 'GBP', d);
+    }
+    if (val > 0) holdingsValues[d] = val;
+  }
+
+  const baseHoldings = holdingsValues[anchor];
+  const baseSp500    = sp500[anchor];
+  const baseFtse     = ftse[anchor];
 
   const series = chartDates
     .filter(d => d >= anchor)
     .map(d => ({
-      date:       d,
-      portfolio:  portValues[d] != null ? parseFloat(((portValues[d] / basePort  - 1) * 100).toFixed(2)) : null,
-      sp500:      sp500[d]    != null ? parseFloat(((sp500[d]    / baseSp500 - 1) * 100).toFixed(2)) : null,
-      ftse100:    ftse[d]     != null ? parseFloat(((ftse[d]     / baseFtse  - 1) * 100).toFixed(2)) : null,
+      date:      d,
+      portfolio: holdingsValues[d] != null ? parseFloat(((holdingsValues[d] / baseHoldings - 1) * 100).toFixed(2)) : null,
+      sp500:     sp500[d] != null          ? parseFloat(((sp500[d]    / baseSp500 - 1) * 100).toFixed(2)) : null,
+      ftse100:   ftse[d]  != null          ? parseFloat(((ftse[d]     / baseFtse  - 1) * 100).toFixed(2)) : null,
     }))
     .filter(p => p.portfolio != null || p.sp500 != null);
 
-  return { series, period, startDate: anchor, endDate: todayStr };
+  // Absolute GBP value series for the £ Value chart
+  const valueSeries = chartDates
+    .filter(d => d >= portStartStr && portValues[d] != null)
+    .map(d => ({ date: d, value: parseFloat(portValues[d].toFixed(2)) }));
+
+  // Annual returns — year-by-year breakdown using the stable basket
+  const annualReturns = [];
+  const anchorYear = parseInt(anchor.slice(0, 4));
+  const todayYear  = parseInt(todayStr.slice(0, 4));
+
+  for (let year = anchorYear; year <= todayYear; year++) {
+    // Start: anchor date for the first year, else first available date in Jan
+    const winStart = year === anchorYear
+      ? anchor
+      : chartDates.find(d => d >= `${year}-01-01` && holdingsValues[d] != null);
+
+    // End: last available date within this year
+    const winEnd = chartDates
+      .filter(d => d <= `${Math.min(year, todayYear)}-12-31` && d.startsWith(`${year}-`) && holdingsValues[d] != null)
+      .pop();
+
+    if (!winStart || !winEnd || winStart >= winEnd) continue;
+
+    annualReturns.push({
+      year,
+      partial: year === anchorYear || year === todayYear,
+      portfolio: parseFloat(((holdingsValues[winEnd] / holdingsValues[winStart] - 1) * 100).toFixed(2)),
+      sp500:     sp500[winEnd] && sp500[winStart]
+        ? parseFloat(((sp500[winEnd]  / sp500[winStart]  - 1) * 100).toFixed(2)) : null,
+      ftse100:   ftse[winEnd] && ftse[winStart]
+        ? parseFloat(((ftse[winEnd]   / ftse[winStart]   - 1) * 100).toFixed(2)) : null,
+    });
+  }
+
+  return { series, valueSeries, annualReturns, period, startDate: anchor, endDate: todayStr };
 }
 
 module.exports = { getPortfolioPerformance, PERIOD_LABELS };

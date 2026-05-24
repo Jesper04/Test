@@ -1,15 +1,19 @@
 'use strict';
 
-const yahooFinance = require('yahoo-finance2').default;
+const YahooFinance = require('yahoo-finance2').default;
+const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHistorical'] });
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const DAYS_PER_YEAR = 365.25;
 
 async function safeQuote(ticker) {
   try {
-    return await yahooFinance.quote(ticker, {
-      fields: ['regularMarketPrice', 'currency', 'longName', 'shortName'],
-    });
+    const q = await yahooFinance.quote(
+      ticker,
+      { fields: ['regularMarketPrice', 'currency', 'longName', 'shortName'] },
+      { validateResult: false },
+    );
+    return q?.regularMarketPrice != null ? q : null;
   } catch {
     return null;
   }

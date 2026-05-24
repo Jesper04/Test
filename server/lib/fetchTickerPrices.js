@@ -1,6 +1,7 @@
 'use strict';
 
-const yahooFinance = require('yahoo-finance2').default;
+const YahooFinance = require('yahoo-finance2').default;
+const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
 
 /**
  * Fetch the closing price for a ticker on or just after a given date.

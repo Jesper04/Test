@@ -8,11 +8,12 @@ const SYSTEM_PROMPT = `You are a financial portfolio CSV parser specialising in 
 
 TICKER EXTRACTION
 Many UK broker CSVs have no dedicated ticker column — the ticker must be inferred from the description/company name. Rules:
-- Use your knowledge of real stock tickers. "Pool Corp" → POOL, "Berkshire Hathaway Class B" → BRK.B, "Moody's Corp" → MCO, "Occidental Petroleum" → OXY, "Fidelity National Information Services" → FIS, "S&P Global" → SPGI, "Elevance Health" → ELV, "Centene Corp" → CNC, "Howard Hughes Holdings" → HHH, "Canadian Pacific Kansas City" → CP, "Under Armour Class C" → UA, "Neogen Corp" → NEOG, "Pershing Square Holdings" → PSH, "Universal Music Group" → UMG, "Vanguard S&P 500 UCITS ETF" → VUSA.
+- Use your knowledge of real stock tickers. "Pool Corp" → POOL, "Berkshire Hathaway Class B" → BRK-B, "Moody's Corp" → MCO, "Occidental Petroleum" → OXY, "Fidelity National Information Services" → FIS, "S&P Global" → SPGI, "Elevance Health" → ELV, "Centene Corp" → CNC, "Howard Hughes Holdings" → HHH, "Canadian Pacific Kansas City" → CP, "Under Armour Class C" → UA, "Neogen Corp" → NEOG, "Pershing Square Holdings" → PSH, "Universal Music Group" → UMG, "Vanguard S&P 500 UCITS ETF" → VUSA.
 - For ADRs (description contains "ADR"): use the ADR ticker. "Marubeni Corp ADR" → MARUY.
-- Use CURRENT tickers, not delisted ones. Weatherford International relisted in 2021 as WFRD (not WFT). Always use the active ticker.
+- Use CURRENT tickers, not delisted ones. Companies rebrand and tickers change — always use the active ticker. Weatherford International relisted in 2021 as WFRD (not WFT). Bank of Georgia / Bank of Georgia Group / Lion Finance Group → BGEO.L (rebranded but same LSE listing). Universal Music Group NV → UMG.AS (Euronext Amsterdam).
 - For UK-listed stocks add .L suffix: "HSBC Holdings" → HSBA.L, "Pershing Square Holdings" → PSH.L.
-- If the description contains an exchange suffix like (GBP) or lists as a UCITS ETF, it trades on a UK exchange.
+- If the description contains an exchange suffix like (GBP) or lists as a UCITS ETF or has "ORD GBP" in the description, it trades on a UK exchange — use the .L suffix ticker, NOT the US-listed equivalent. "iShares Core MSCI World UCITS ETF" → SWDA.L (NOT URTH). "iShares MSCI Europe UCITS ETF" → IMAE.L (NOT EZU).
+- "JPMorgan Emerging Europe, Middle East & Africa" (also written as "JPMorgan Emerging Europe, Middle East & Africa Sec ORD GBP0.01") → JEMA.L
 - Only flag a ticker as uncertain in parseWarnings if you genuinely cannot determine it.
 
 PER-TRANSACTION CURRENCY
@@ -82,8 +83,8 @@ const RESPONSE_SCHEMA = {
 
 async function parseCsvWithAI(csvContent) {
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5',
-    max_tokens: 4096,
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 8192,
     system: [
       {
         type: 'text',
@@ -91,24 +92,26 @@ async function parseCsvWithAI(csvContent) {
         cache_control: { type: 'ephemeral' },
       },
     ],
+    tools: [
+      {
+        name: 'return_parsed_csv',
+        description: 'Return the structured result of parsing the broker CSV',
+        input_schema: RESPONSE_SCHEMA,
+      },
+    ],
+    tool_choice: { type: 'tool', name: 'return_parsed_csv' },
     messages: [
       {
         role: 'user',
         content: `Parse this broker CSV and return the structured JSON:\n\n${csvContent}`,
       },
     ],
-    output_config: {
-      format: {
-        type: 'json_schema',
-        schema: RESPONSE_SCHEMA,
-      },
-    },
   });
 
-  const textBlock = response.content.find((b) => b.type === 'text');
-  if (!textBlock) throw new Error('No text content in AI response');
+  const toolUse = response.content.find((b) => b.type === 'tool_use');
+  if (!toolUse) throw new Error('No tool_use block in AI response');
 
-  return JSON.parse(textBlock.text);
+  return toolUse.input;
 }
 
 module.exports = { parseCsvWithAI };
