@@ -1,0 +1,12 @@
+﻿
+> react-dashboard@0.0.0 dev
+> vite
+
+npm.cmd : '"node"' is not recognized as an internal or external command,
+At line:1 char:1
++ & "C:\Program Files\nodejs\npm.cmd" run dev 2>&1 | Out-File -FilePath ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ('"node"' is not...ternal command,:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+operable program or batch file.

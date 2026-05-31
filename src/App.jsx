@@ -90,6 +90,17 @@ export default function App() {
   const [analysis, setAnalysis]     = useState(null)
   const [errorMsg, setErrorMsg]     = useState('')
 
+  async function parseJsonResponse(res) {
+    const text = await res.text()
+    if (!text) return null
+
+    try {
+      return JSON.parse(text)
+    } catch (err) {
+      throw new Error(`Invalid server response: ${text}`)
+    }
+  }
+
   async function uploadFile(file) {
     if (!file || !file.name.toLowerCase().endsWith('.csv')) {
       setErrorMsg('Please upload a CSV file.')
@@ -106,8 +117,9 @@ export default function App() {
       const form = new FormData()
       form.append('file', file)
       const res  = await fetch('/api/parse-csv', { method: 'POST', body: form })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`)
+      const data = await parseJsonResponse(res)
+      if (!res.ok) throw new Error(data?.error || `Server error ${res.status}`)
+      if (!data) throw new Error('Server returned empty response for CSV parsing')
       parsed = data
       setParseData(data)
     } catch (err) {
@@ -124,8 +136,8 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactions: parsed.transactions }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`)
+      const data = await parseJsonResponse(res)
+      if (!res.ok) throw new Error(data?.error || `Server error ${res.status}`)
       setAnalysis(data)
       setStatus('done')
     } catch (err) {

@@ -18,4 +18,11 @@ app.use('/api/cagr/ticker', cagrTickerRouter);
 app.use('/api/parse-csv', parseCsvRouter);
 app.use('/api/portfolio', portfolioRouter);
 
+// Global JSON error handler for unexpected failures
+app.use((err, _req, res, _next) => {
+  console.error('Unhandled server error:', err);
+  if (res.headersSent) return;
+  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+});
+
 module.exports = app;
