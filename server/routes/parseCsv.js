@@ -2,7 +2,8 @@
 
 const express = require('express');
 const multer = require('multer');
-const { parseCsvWithAI } = require('../lib/parseCsvWithAI');
+const { parseCsvWithAI, extractDeposits } = require('../lib/parseCsvWithAI');
+const store = require('../lib/portfolioStore');
 
 const router = express.Router();
 
@@ -47,6 +48,8 @@ router.post('/', upload.single('file'), async (req, res) => {
 
   try {
     const result = await parseCsvWithAI(csvContent);
+    result.deposits = extractDeposits(csvContent);
+    store.save({ transactions: result.transactions, dividends: result.dividends, deposits: result.deposits, currency: result.currency });
     return res.status(200).json({ success: true, ...result });
   } catch (err) {
     console.error('CSV AI parse error:', err.message);

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import PerformanceChart from './components/PerformanceChart'
 
 const NAV = [
@@ -19,7 +19,7 @@ const DEMO_TRANSACTIONS = [
 ]
 
 const DEMO_METRICS = [
-  { label: 'Portfolio CAGR',    value: '—',  change: 'Upload a CSV to calculate',  positive: true },
+  { label: 'MWRR',              value: '—',  change: 'Upload a CSV to calculate',  positive: true },
   { label: 'Portfolio Value',   value: '—',  change: 'Upload a CSV to calculate',  positive: true },
   { label: 'Total Gain / Loss', value: '—',  change: 'Upload a CSV to calculate',  positive: true },
 ]
@@ -90,6 +90,25 @@ export default function App() {
   const [analysis, setAnalysis]     = useState(null)
   const [errorMsg, setErrorMsg]     = useState('')
 
+  useEffect(() => {
+    fetch('/api/portfolio/stored')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data?.transactions?.length) return
+        setParseData(data)
+        setStatus('analysing')
+        fetch('/api/portfolio/analyse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ transactions: data.transactions, dividends: data.dividends || [] }),
+        })
+          .then(r => r.json())
+          .then(a => { setAnalysis(a); setStatus('done') })
+          .catch(() => setStatus('done'))
+      })
+      .catch(() => {})
+  }, [])
+
   async function parseJsonResponse(res) {
     const text = await res.text()
     if (!text) return null
@@ -134,7 +153,7 @@ export default function App() {
       const res  = await fetch('/api/portfolio/analyse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions: parsed.transactions }),
+        body: JSON.stringify({ transactions: parsed.transactions, dividends: parsed.dividends || [] }),
       })
       const data = await parseJsonResponse(res)
       if (!res.ok) throw new Error(data?.error || `Server error ${res.status}`)
@@ -192,10 +211,10 @@ export default function App() {
   const metrics = analysis?.metrics
     ? [
         {
-          label:    'Portfolio CAGR',
-          value:    analysis.metrics.portfolioCagrPct ?? '—',
+          label:    'MWRR',
+          value:    analysis.metrics.portfolioMwrrPct ?? '—',
           change:   `Over ${analysis.metrics.years} years`,
-          positive: (analysis.metrics.portfolioCagr ?? 0) >= 0,
+          positive: (analysis.metrics.portfolioMwrr ?? 0) >= 0,
         },
         {
           label:    'Portfolio Value',
@@ -206,7 +225,7 @@ export default function App() {
         {
           label:    'Total Gain / Loss',
           value:    fmt(analysis.metrics.gainLossGbp),
-          change:   `${analysis.metrics.gainLossPct >= 0 ? '+' : ''}${analysis.metrics.gainLossPct.toFixed(2)}% since first trade`,
+          change:   `${analysis.metrics.gainLossPct >= 0 ? '+' : ''}${analysis.metrics.gainLossPct.toFixed(2)}% · ${analysis.metrics.realizedGainLossGbp >= 0 ? '+' : ''}${fmt(analysis.metrics.realizedGainLossGbp)} realized`,
           positive: analysis.metrics.gainLossGbp >= 0,
         },
       ]
@@ -324,7 +343,7 @@ export default function App() {
 
         {/* ── Performance chart ───────────────────────── */}
         {isDone && parseData?.transactions?.length > 0 && (
-          <PerformanceChart transactions={parseData.transactions} />
+          <PerformanceChart transactions={parseData.transactions} deposits={parseData.deposits || []} />
         )}
 
         {/* ── Metrics ─────────────────────────────────── */}

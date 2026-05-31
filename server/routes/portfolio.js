@@ -7,14 +7,14 @@ const { getPortfolioPerformance }   = require('../lib/portfolioPerformance');
 const router = express.Router();
 
 router.post('/analyse', async (req, res) => {
-  const { transactions } = req.body;
+  const { transactions, dividends = [] } = req.body;
 
   if (!Array.isArray(transactions) || transactions.length === 0) {
     return res.status(400).json({ error: 'transactions array is required', field: 'transactions' });
   }
 
   try {
-    const result = await analysePortfolio(transactions);
+    const result = await analysePortfolio(transactions, dividends);
     return res.status(200).json(result);
   } catch (err) {
     console.error('Portfolio analyse error:', err.message);
@@ -23,7 +23,7 @@ router.post('/analyse', async (req, res) => {
 });
 
 router.post('/performance', async (req, res) => {
-  const { transactions, period } = req.body;
+  const { transactions, period, deposits = [] } = req.body;
 
   if (!Array.isArray(transactions) || transactions.length === 0) {
     return res.status(400).json({ error: 'transactions array is required', field: 'transactions' });
@@ -34,8 +34,9 @@ router.post('/performance', async (req, res) => {
     return res.status(400).json({ error: `period must be one of: ${validPeriods.join(', ')}`, field: 'period' });
   }
 
+  console.log('[PERF] deposits received:', deposits.length, deposits.slice(0, 3));
   try {
-    const result = await getPortfolioPerformance(transactions, period);
+    const result = await getPortfolioPerformance(transactions, period, deposits);
     return res.status(200).json(result);
   } catch (err) {
     console.error('Portfolio performance error:', err.message);

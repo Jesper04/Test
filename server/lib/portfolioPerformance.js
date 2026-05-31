@@ -63,7 +63,7 @@ function holdingsAt(sortedTx, dateStr) {
   return h;
 }
 
-async function getPortfolioPerformance(transactions, period) {
+async function getPortfolioPerformance(transactions, period, deposits = []) {
   const today    = new Date();
   const todayStr = today.toISOString().slice(0, 10);
 
@@ -87,10 +87,13 @@ async function getPortfolioPerformance(transactions, period) {
     if (!txCurrency[tx.ticker]) txCurrency[tx.ticker] = tx.currency || 'GBP';
   }
 
+  const hasChf = Object.values(txCurrency).some(c => c === 'CHF');
+
   // Fetch everything in parallel
-  const [gbpUsdRows, gbpEurRows, sp500Rows, ftseRows, ...tickerHistories] = await Promise.all([
+  const [gbpUsdRows, gbpEurRows, gbpChfRows, sp500Rows, ftseRows, ...tickerHistories] = await Promise.all([
     fetchHistory('GBPUSD=X', benchStartStr, todayStr, interval),
     fetchHistory('GBPEUR=X', benchStartStr, todayStr, interval),
+    hasChf ? fetchHistory('GBPCHF=X', benchStartStr, todayStr, interval) : Promise.resolve([]),
     fetchHistory('^GSPC',    benchStartStr, todayStr, interval),
     fetchHistory('^FTSE',    benchStartStr, todayStr, interval),
     ...tickers.map(t => fetchHistory(t, portStartStr, todayStr, interval)),
@@ -99,6 +102,7 @@ async function getPortfolioPerformance(transactions, period) {
   // Build price maps
   const gbpUsdMap = toDateMap(gbpUsdRows);
   const gbpEurMap = toDateMap(gbpEurRows);
+  const gbpChfMap = toDateMap(gbpChfRows);
   const sp500Map  = toDateMap(sp500Rows);
   const ftseMap   = toDateMap(ftseRows);
 
@@ -117,6 +121,7 @@ async function getPortfolioPerformance(transactions, period) {
   // Forward-fill everything
   const gbpUsd = forwardFill(chartDates, gbpUsdMap);
   const gbpEur = forwardFill(chartDates, gbpEurMap);
+  const gbpChf = forwardFill(chartDates, gbpChfMap);
   const sp500  = forwardFill(chartDates, sp500Map);
   const ftse   = forwardFill(chartDates, ftseMap);
   const tFilled = {};
@@ -129,6 +134,7 @@ async function getPortfolioPerformance(transactions, period) {
     }
     if (cur === 'USD') return nativePrice / (gbpUsd[d] || 1.27);
     if (cur === 'EUR') return nativePrice / (gbpEur[d] || 1.17);
+    if (cur === 'CHF') return nativePrice / (gbpChf[d] || 1.12);
     return nativePrice;
   }
 
@@ -208,32 +214,64 @@ async function getPortfolioPerformance(transactions, period) {
     .filter(d => d >= portStartStr && portValues[d] != null)
     .map(d => ({ date: d, value: parseFloat(portValues[d].toFixed(2)) }));
 
-  // Annual returns — year-by-year breakdown using the stable basket
+  // Annual returns using Modified Dietz — adjusts for net cash deployed each year
+  // so large deposits don't inflate apparent returns
   const annualReturns = [];
-  const anchorYear = parseInt(anchor.slice(0, 4));
-  const todayYear  = parseInt(todayStr.slice(0, 4));
+  const firstTradeYear = parseInt(sortedTx[0].date.slice(0, 4));
+  const todayYear      = parseInt(todayStr.slice(0, 4));
 
-  for (let year = anchorYear; year <= todayYear; year++) {
-    // Start: anchor date for the first year, else first available date in Jan
-    const winStart = year === anchorYear
-      ? anchor
-      : chartDates.find(d => d >= `${year}-01-01` && holdingsValues[d] != null);
+  for (let year = firstTradeYear; year <= todayYear; year++) {
+    const winStart = year === firstTradeYear
+      ? chartDates.find(d => d >= `${year}-01-01` && portValues[d] != null)
+      : chartDates.filter(d => d <= `${year - 1}-12-31` && portValues[d] != null).pop();
 
-    // End: last available date within this year
     const winEnd = chartDates
-      .filter(d => d <= `${Math.min(year, todayYear)}-12-31` && d.startsWith(`${year}-`) && holdingsValues[d] != null)
+      .filter(d => d <= `${year}-12-31` && d.startsWith(`${year}-`) && portValues[d] != null)
       .pop();
 
     if (!winStart || !winEnd || winStart >= winEnd) continue;
 
+    // Net new money deployed into stocks this year (buys minus sells)
+    // This is what actually entered portValues — not raw cash deposits
+    let yearBuys = 0, yearSells = 0;
+    for (const tx of sortedTx) {
+      if (tx.date > winStart && tx.date <= winEnd) {
+        if (tx.action === 'BUY') yearBuys += tx.total;
+        else yearSells += tx.total;
+      }
+    }
+    const netStockFlow = yearBuys - yearSells;
+
+    const sv = portValues[winStart];
+    const ev = portValues[winEnd];
+    const denominator = sv + netStockFlow / 2;
+    if (!sv || !ev || denominator <= 0) continue;
+
+    // Per-holding breakdown for top/bottom performers this year
+    const startHoldings = holdingsAt(sortedTx, winStart);
+    const holdingReturns = [];
+    for (const [ticker, shares] of Object.entries(startHoldings)) {
+      if (shares <= 0.0001) continue;
+      const sp = tFilled[ticker]?.[winStart];
+      const ep = tFilled[ticker]?.[winEnd];
+      if (!sp || !ep) continue;
+      holdingReturns.push({ ticker, return: parseFloat(((ep / sp - 1) * 100).toFixed(2)) });
+    }
+    holdingReturns.sort((a, b) => b.return - a.return);
+    const n = holdingReturns.length;
+    const topHoldings    = holdingReturns.slice(0, Math.min(3, n));
+    const bottomHoldings = n > 3 ? [...holdingReturns].slice(Math.max(n - 3, 3)).reverse() : [];
+
     annualReturns.push({
       year,
-      partial: year === anchorYear || year === todayYear,
-      portfolio: parseFloat(((holdingsValues[winEnd] / holdingsValues[winStart] - 1) * 100).toFixed(2)),
-      sp500:     sp500[winEnd] && sp500[winStart]
+      partial: year === firstTradeYear || year === todayYear,
+      portfolio: parseFloat(((ev - sv - netStockFlow) / denominator * 100).toFixed(2)),
+      sp500:   sp500[winEnd] && sp500[winStart]
         ? parseFloat(((sp500[winEnd]  / sp500[winStart]  - 1) * 100).toFixed(2)) : null,
-      ftse100:   ftse[winEnd] && ftse[winStart]
+      ftse100: ftse[winEnd]  && ftse[winStart]
         ? parseFloat(((ftse[winEnd]   / ftse[winStart]   - 1) * 100).toFixed(2)) : null,
+      topHoldings,
+      bottomHoldings,
     });
   }
 

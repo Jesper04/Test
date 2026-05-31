@@ -6,6 +6,33 @@ const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey', 'ripHis
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const DAYS_PER_YEAR = 365.25;
 
+function xirr(cashflows) {
+  if (cashflows.length < 2) return null;
+  const t0 = cashflows[0].date.getTime();
+  const yrs = cf => (cf.date.getTime() - t0) / (365.25 * 86400000);
+  let rate = 0.1;
+  for (let i = 0; i < 300; i++) {
+    let f = 0, df = 0;
+    for (const cf of cashflows) {
+      const t  = yrs(cf);
+      const pv = Math.pow(1 + rate, t);
+      f  += cf.amount / pv;
+      df -= t * cf.amount / (pv * (1 + rate));
+    }
+    if (Math.abs(df) < 1e-10) break;
+    const step = f / df;
+    rate -= step;
+    if (rate <= -1) { rate = -0.9999; break; }
+    if (Math.abs(step) < 1e-8) break;
+  }
+  let check = 0;
+  for (const cf of cashflows) {
+    check += cf.amount / Math.pow(1 + rate, yrs(cf));
+  }
+  const totalInvested = cashflows.reduce((s, cf) => s + Math.abs(cf.amount), 0);
+  return Math.abs(check) < totalInvested * 0.001 ? rate : null;
+}
+
 async function safeQuote(ticker) {
   try {
     const q = await yahooFinance.quote(
@@ -68,7 +95,7 @@ function closestFxRate(fxMap, dateStr) {
   return null;
 }
 
-async function analysePortfolio(transactions) {
+async function analysePortfolio(transactions, dividends = []) {
   const today = new Date().toISOString().slice(0, 10);
 
   // ── 1. Sort dates ────────────────────────────────────────
@@ -78,9 +105,13 @@ async function analysePortfolio(transactions) {
 
   // ── 2. Aggregate net holdings and cost basis ─────────────
   const holdingsMap = {}; // ticker → { shares, costBasisGbp, currency, currencySymbol }
-  let totalCostGbp = 0;
+  let totalBuyGbp          = 0; // total cash ever invested
+  let totalSaleProceedsGbp = 0; // total cash received from sells
+  let realizedGainLossGbp  = 0; // realized P&L from closed positions
 
-  for (const tx of transactions) {
+  const sortedTransactions = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
+
+  for (const tx of sortedTransactions) {
     if (!holdingsMap[tx.ticker]) {
       holdingsMap[tx.ticker] = {
         ticker: tx.ticker,
@@ -93,12 +124,15 @@ async function analysePortfolio(transactions) {
     const h = holdingsMap[tx.ticker];
     if (tx.action === 'BUY') {
       h.shares       += tx.shares;
-      h.costBasisGbp += tx.total; // total is already in GBP (HL prices in GBP)
-      totalCostGbp   += tx.total;
+      h.costBasisGbp += tx.total;
+      totalBuyGbp    += tx.total;
     } else {
-      h.shares       -= tx.shares;
-      h.costBasisGbp -= tx.total;
-      totalCostGbp   -= tx.total;
+      const costPerShare     = h.shares > 0 ? h.costBasisGbp / h.shares : 0;
+      const costOfSoldShares = costPerShare * tx.shares;
+      h.shares             -= tx.shares;
+      h.costBasisGbp       -= costOfSoldShares;
+      totalSaleProceedsGbp += tx.total;
+      realizedGainLossGbp  += (tx.total - costOfSoldShares);
     }
   }
 
@@ -146,6 +180,7 @@ async function analysePortfolio(transactions) {
     const quote = quoteResults[i].status === 'fulfilled' ? quoteResults[i].value : null;
 
     if (!quote) {
+      console.log(`[HOLDING] ${holding.ticker}: no quote returned`);
       enrichedHoldings.push({ ...holding, currentPriceGbp: null, currentValueGbp: null, name: holding.ticker });
       continue;
     }
@@ -153,6 +188,7 @@ async function analysePortfolio(transactions) {
     // Convert to GBP
     let currentPriceGbp;
     const cur = quote.currency;
+    console.log(`[HOLDING] ${holding.ticker}: price=${quote.regularMarketPrice} currency=${cur} shares=${holding.shares} costBasis=${holding.costBasisGbp.toFixed(2)} liveGbpUsd=${liveGbpUsd}`);
     if (cur === 'GBp') {
       currentPriceGbp = quote.regularMarketPrice / 100;
     } else if (cur === 'USD') {
@@ -188,14 +224,34 @@ async function analysePortfolio(transactions) {
   }
   enrichedHoldings.sort((a, b) => (b.currentValueGbp ?? 0) - (a.currentValueGbp ?? 0));
 
-  // ── 6. Portfolio CAGR ────────────────────────────────────
+  // ── 6. MWRR via XIRR (accounts for timing and size of every trade + dividends) ──
   const years = (new Date(today) - new Date(firstTradeDate)) / (MS_PER_DAY * DAYS_PER_YEAR);
-  let portfolioCagr = null, portfolioCagrPct = null;
+  let portfolioMwrr = null, portfolioMwrrPct = null;
 
-  if (totalCostGbp > 0 && totalCurrentValueGbp > 0 && years > 0) {
-    const raw = Math.pow(totalCurrentValueGbp / totalCostGbp, 1 / years) - 1;
-    portfolioCagr    = parseFloat(raw.toFixed(4));
-    portfolioCagrPct = `${(portfolioCagr * 100).toFixed(2)}%`;
+  const cashflows = [
+    ...sortedTransactions.map(tx => ({
+      amount: tx.action === 'BUY' ? -tx.total : tx.total,
+      date:   new Date(tx.date + 'T00:00:00Z'),
+    })),
+    ...dividends.map(div => ({
+      amount: div.amount,          // positive — income received
+      date:   new Date(div.date + 'T00:00:00Z'),
+    })),
+  ].sort((a, b) => a.date - b.date);
+
+  if (totalCurrentValueGbp > 0) {
+    cashflows.push({ amount: totalCurrentValueGbp, date: new Date(today + 'T00:00:00Z') });
+  }
+
+  console.log('[XIRR] cashflow count:', cashflows.length,
+    '| first:', cashflows[0]?.amount?.toFixed(2), cashflows[0]?.date?.toISOString().slice(0,10),
+    '| last:', cashflows[cashflows.length-1]?.amount?.toFixed(2), cashflows[cashflows.length-1]?.date?.toISOString().slice(0,10),
+    '| totalCurrentValueGbp:', totalCurrentValueGbp.toFixed(2));
+
+  portfolioMwrr = xirr(cashflows);
+  console.log('[XIRR] result:', portfolioMwrr);
+  if (portfolioMwrr !== null) {
+    portfolioMwrrPct = `${(portfolioMwrr * 100).toFixed(2)}%`;
   }
 
   // ── 7. Benchmark CAGRs (same period as portfolio) ────────
@@ -222,28 +278,31 @@ async function analysePortfolio(transactions) {
     .map(r => r.value);
 
   // Add portfolio to benchmark chart
-  if (portfolioCagr !== null) {
+  if (portfolioMwrr !== null) {
     benchmarks.unshift({
       label: 'Your Portfolio',
-      cagr: portfolioCagr,
-      cagrPct: portfolioCagrPct,
-      value: parseFloat((portfolioCagr * 100).toFixed(2)),
+      cagr: portfolioMwrr,
+      cagrPct: portfolioMwrrPct,
+      value: parseFloat((portfolioMwrr * 100).toFixed(2)),
       color: '#C4A96A',
     });
   }
+
+  const totalGainLossGbp = totalCurrentValueGbp + totalSaleProceedsGbp - totalBuyGbp;
 
   return {
     holdings: enrichedHoldings,
     enrichedTransactions,
     metrics: {
-      totalValueGbp: parseFloat(totalCurrentValueGbp.toFixed(2)),
-      totalCostGbp:  parseFloat(totalCostGbp.toFixed(2)),
-      gainLossGbp:   parseFloat((totalCurrentValueGbp - totalCostGbp).toFixed(2)),
-      gainLossPct:   totalCostGbp > 0
-        ? parseFloat(((totalCurrentValueGbp - totalCostGbp) / totalCostGbp * 100).toFixed(2))
+      totalValueGbp:       parseFloat(totalCurrentValueGbp.toFixed(2)),
+      totalCostGbp:        parseFloat(totalBuyGbp.toFixed(2)),
+      gainLossGbp:         parseFloat(totalGainLossGbp.toFixed(2)),
+      gainLossPct:         totalBuyGbp > 0
+        ? parseFloat((totalGainLossGbp / totalBuyGbp * 100).toFixed(2))
         : 0,
-      portfolioCagr,
-      portfolioCagrPct,
+      realizedGainLossGbp: parseFloat(realizedGainLossGbp.toFixed(2)),
+      portfolioMwrr,
+      portfolioMwrrPct,
       years: parseFloat(years.toFixed(2)),
       firstTradeDate,
       asOf: today,

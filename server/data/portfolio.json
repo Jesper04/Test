@@ -1,0 +1,1099 @@
+{
+  "transactions": [
+    {
+      "ticker": "POOL",
+      "date": "2026-05-12",
+      "shares": 5,
+      "pricePerShare": 134.6913,
+      "total": 673.4565,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2026-05-05",
+      "shares": 5,
+      "pricePerShare": 141.4014,
+      "total": 707.007,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "BRK-B",
+      "date": "2026-04-30",
+      "shares": 6,
+      "pricePerShare": 351.6515,
+      "total": 2109.909,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MERC",
+      "date": "2026-04-13",
+      "shares": 50,
+      "pricePerShare": 0.8176,
+      "total": 40.88,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "JELD",
+      "date": "2026-04-13",
+      "shares": 31,
+      "pricePerShare": 0.7581,
+      "total": 23.501,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2026-03-23",
+      "shares": 6,
+      "pricePerShare": 151.5242,
+      "total": 909.1452,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2026-03-18",
+      "shares": 110,
+      "pricePerShare": 14.475,
+      "total": 1592.25,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "OXY",
+      "date": "2026-03-16",
+      "shares": 22,
+      "pricePerShare": 43.155,
+      "total": 949.41,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2026-02-19",
+      "shares": 6,
+      "pricePerShare": 165.6684,
+      "total": 993.0104,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "FIS",
+      "date": "2026-02-03",
+      "shares": 21,
+      "pricePerShare": 37.5793,
+      "total": 789.1653,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "WFRD",
+      "date": "2026-01-28",
+      "shares": 3,
+      "pricePerShare": 67.4368,
+      "total": 202.3104,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MCO",
+      "date": "2026-01-27",
+      "shares": 5,
+      "pricePerShare": 378.0414,
+      "total": 1890.207,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MARUY",
+      "date": "2026-01-20",
+      "shares": 5,
+      "pricePerShare": 237.5496,
+      "total": 1187.748,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "HHH",
+      "date": "2025-12-23",
+      "shares": 6,
+      "pricePerShare": 58.0129,
+      "total": 348.0774,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2025-12-23",
+      "shares": 2,
+      "pricePerShare": 171.8791,
+      "total": 343.7582,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "HHH",
+      "date": "2025-12-19",
+      "shares": 16,
+      "pricePerShare": 61.4137,
+      "total": 982.6192,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "CP.L",
+      "date": "2025-12-19",
+      "shares": 27,
+      "pricePerShare": 55.7649,
+      "total": 1505.6523,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2025-11-18",
+      "shares": 4,
+      "pricePerShare": 178.9518,
+      "total": 715.8072,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "NEOG",
+      "date": "2025-11-18",
+      "shares": 25,
+      "pricePerShare": 4.661,
+      "total": 116.525,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "ELV",
+      "date": "2025-11-18",
+      "shares": 1,
+      "pricePerShare": 248.8005,
+      "total": 248.8005,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "POOL",
+      "date": "2025-11-06",
+      "shares": 4,
+      "pricePerShare": 186.8275,
+      "total": 747.31,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "FIS",
+      "date": "2025-10-29",
+      "shares": 15,
+      "pricePerShare": 46.6057,
+      "total": 699.0855,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "VUSA",
+      "date": "2025-10-13",
+      "shares": 3,
+      "pricePerShare": 95.672,
+      "total": 287.016,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "FIS",
+      "date": "2025-09-25",
+      "shares": 26,
+      "pricePerShare": 48.1935,
+      "total": 1253.031,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MERC",
+      "date": "2025-09-03",
+      "shares": 50,
+      "pricePerShare": 2.3434,
+      "total": 117.17,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "UA",
+      "date": "2025-08-29",
+      "shares": 54,
+      "pricePerShare": 3.6856,
+      "total": 198.9224,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "CNC",
+      "date": "2025-08-20",
+      "shares": 13,
+      "pricePerShare": 21.6739,
+      "total": 281.7607,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "ELV",
+      "date": "2025-08-20",
+      "shares": 1,
+      "pricePerShare": 232.5532,
+      "total": 232.5532,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2025-08-15",
+      "shares": 24,
+      "pricePerShare": 41.934,
+      "total": 1006.416,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "SPGI",
+      "date": "2025-08-15",
+      "shares": 3,
+      "pricePerShare": 412.7541,
+      "total": 1238.2623,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "WFRD",
+      "date": "2025-08-07",
+      "shares": 3,
+      "pricePerShare": 41.3889,
+      "total": 124.1667,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "JELD",
+      "date": "2025-07-07",
+      "shares": 31,
+      "pricePerShare": 3.1391,
+      "total": 97.1121,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "NEOG",
+      "date": "2025-07-07",
+      "shares": 25,
+      "pricePerShare": 3.8702,
+      "total": 96.755,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "BRK-B",
+      "date": "2025-04-28",
+      "shares": 2,
+      "pricePerShare": 399.8759,
+      "total": 799.7518,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2025-04-28",
+      "shares": 15,
+      "pricePerShare": 35.8209,
+      "total": 537.3135,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "OXY",
+      "date": "2025-03-05",
+      "shares": 7,
+      "pricePerShare": 34.8598,
+      "total": 243.0186,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MARUY",
+      "date": "2025-02-25",
+      "shares": 15,
+      "pricePerShare": 128.858,
+      "total": 1932.87,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "VUSA",
+      "date": "2025-02-25",
+      "shares": 6,
+      "pricePerShare": 89.269,
+      "total": 535.614,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "NKE",
+      "date": "2025-02-25",
+      "shares": 6,
+      "pricePerShare": 63.657,
+      "total": 381.942,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "CP.L",
+      "date": "2025-02-03",
+      "shares": 9,
+      "pricePerShare": 59.443,
+      "total": 535.287,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "OXY",
+      "date": "2025-02-03",
+      "shares": 15,
+      "pricePerShare": 37.3686,
+      "total": 560.529,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "VUSA",
+      "date": "2025-01-23",
+      "shares": 9,
+      "pricePerShare": 93.9085,
+      "total": 845.1765,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "HSY",
+      "date": "2024-12-09",
+      "shares": 5,
+      "pricePerShare": 154.8267,
+      "total": 774.1335,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2024-11-25",
+      "shares": 41,
+      "pricePerShare": 18.7502,
+      "total": 768.758,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2024-11-01",
+      "shares": 28,
+      "pricePerShare": 34.9194,
+      "total": 977.3432,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "MCO",
+      "date": "2024-10-22",
+      "shares": 2,
+      "pricePerShare": 363.5892,
+      "total": 727.1784,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "SBUX",
+      "date": "2024-08-21",
+      "shares": 3,
+      "pricePerShare": 70.9939,
+      "total": 212.9817,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "CP.L",
+      "date": "2024-08-21",
+      "shares": 9,
+      "pricePerShare": 61.1788,
+      "total": 550.609,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "SPGI",
+      "date": "2024-08-16",
+      "shares": 3,
+      "pricePerShare": 382.5999,
+      "total": 1147.7997,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "MCO",
+      "date": "2024-08-16",
+      "shares": 3,
+      "pricePerShare": 361.8346,
+      "total": 1085.5038,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "SBUX",
+      "date": "2024-08-13",
+      "shares": 4,
+      "pricePerShare": 73.2372,
+      "total": 292.9488,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "CP.L",
+      "date": "2024-08-12",
+      "shares": 9,
+      "pricePerShare": 60.8921,
+      "total": 547.0289,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2024-08-06",
+      "shares": 11,
+      "pricePerShare": 35.1924,
+      "total": 387.1164,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2024-07-25",
+      "shares": 158,
+      "pricePerShare": 19.2867,
+      "total": 3047.3,
+      "action": "SELL",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2024-07-25",
+      "shares": 160,
+      "pricePerShare": 18.7334,
+      "total": 2997.344,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2024-07-25",
+      "shares": 17,
+      "pricePerShare": 38.4573,
+      "total": 653.7741,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2024-07-25",
+      "shares": 39,
+      "pricePerShare": 18.4654,
+      "total": 720.5506,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "BGEO.L",
+      "date": "2024-03-11",
+      "shares": 11,
+      "pricePerShare": 50.8422,
+      "total": 559.2642,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "UMG.AS",
+      "date": "2024-02-23",
+      "shares": 30,
+      "pricePerShare": 23.0011,
+      "total": 690.033,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "CLIQ.DE",
+      "date": "2024-02-20",
+      "shares": 14,
+      "pricePerShare": 16.593,
+      "total": 232.302,
+      "action": "SELL",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "CLIQ.DE",
+      "date": "2024-02-20",
+      "shares": 14,
+      "pricePerShare": 16.6782,
+      "total": 233.4948,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2024-02-05",
+      "shares": 19,
+      "pricePerShare": 38.6601,
+      "total": 734.5419,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "HSY",
+      "date": "2024-01-10",
+      "shares": 7,
+      "pricePerShare": 148.9622,
+      "total": 1042.7354,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "BRK-B",
+      "date": "2024-01-10",
+      "shares": 7,
+      "pricePerShare": 288.2324,
+      "total": 2017.6268,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "JEMA.L",
+      "date": "2024-01-02",
+      "shares": 311,
+      "pricePerShare": 1.2751,
+      "total": 396.9661,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2023-12-07",
+      "shares": 14,
+      "pricePerShare": 31.9105,
+      "total": 446.747,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "ALV.DE",
+      "date": "2023-12-07",
+      "shares": 1,
+      "pricePerShare": 207.4589,
+      "total": 207.4589,
+      "action": "SELL",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "BGEO.L",
+      "date": "2023-11-08",
+      "shares": 11,
+      "pricePerShare": 35.17,
+      "total": 386.87,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "PSH.L",
+      "date": "2024-02-20",
+      "shares": 14,
+      "pricePerShare": 16.593,
+      "total": 232.302,
+      "action": "SELL",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "CLIQ.DE",
+      "date": "2024-02-20",
+      "shares": 14,
+      "pricePerShare": 16.6782,
+      "total": 233.4948,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "JEMA.L",
+      "date": "2023-05-16",
+      "shares": 311,
+      "pricePerShare": 1.1234,
+      "total": 349.4774,
+      "action": "BUY",
+      "currency": "GBP",
+      "currencySymbol": "£"
+    },
+    {
+      "ticker": "NESN.SW",
+      "date": "2021-10-20",
+      "shares": 1,
+      "pricePerShare": 91.3516,
+      "total": 91.3516,
+      "action": "SELL",
+      "currency": "CHF",
+      "currencySymbol": "CHF"
+    },
+    {
+      "ticker": "NESN.SW",
+      "date": "2021-09-23",
+      "shares": 2,
+      "pricePerShare": 91.2491,
+      "total": 182.4982,
+      "action": "SELL",
+      "currency": "CHF",
+      "currencySymbol": "CHF"
+    },
+    {
+      "ticker": "ALV.DE",
+      "date": "2021-04-12",
+      "shares": 1,
+      "pricePerShare": 190.0826,
+      "total": 190.0826,
+      "action": "BUY",
+      "currency": "EUR",
+      "currencySymbol": "€"
+    },
+    {
+      "ticker": "NESN.SW",
+      "date": "2021-04-06",
+      "shares": 3,
+      "pricePerShare": 81.6026,
+      "total": 244.8078,
+      "action": "BUY",
+      "currency": "CHF",
+      "currencySymbol": "CHF"
+    },
+    {
+      "ticker": "NKE",
+      "date": "2024-04-09",
+      "shares": 6,
+      "pricePerShare": 71.118,
+      "total": 426.708,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "SBUX",
+      "date": "2024-04-09",
+      "shares": 7,
+      "pricePerShare": 68.5416,
+      "total": 479.7912,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "HSY",
+      "date": "2024-04-09",
+      "shares": 2,
+      "pricePerShare": 151.8493,
+      "total": 303.6986,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    }
+  ],
+  "dividends": [],
+  "deposits": [
+    {
+      "date": "2026-03-10",
+      "amount": 18555,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2026-03-03",
+      "amount": 375,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-12-19",
+      "amount": 200,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-10-24",
+      "amount": 250,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-10-24",
+      "amount": 100,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-09-25",
+      "amount": 200,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-09-22",
+      "amount": 70,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-09-10",
+      "amount": 125,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-05-25",
+      "amount": 125,
+      "description": "Opening Subscription"
+    },
+    {
+      "date": "2025-04-02",
+      "amount": 1500,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-03-07",
+      "amount": 150,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2025-01-30",
+      "amount": 232,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-10-18",
+      "amount": -50,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-09-27",
+      "amount": 210,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-09-09",
+      "amount": -50,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-08-23",
+      "amount": 250,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-08-20",
+      "amount": 100,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-08-05",
+      "amount": -50,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-07-25",
+      "amount": 250,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-07-24",
+      "amount": -30,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-07-22",
+      "amount": -75,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-06-29",
+      "amount": 2600,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-06-28",
+      "amount": 7000,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2024-06-17",
+      "amount": -20,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-06-10",
+      "amount": -20,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
+      "date": "2024-05-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2024-04-08",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2024-03-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2024-02-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2024-01-08",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-12-28",
+      "amount": 3000,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2023-12-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-11-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-10-09",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-09-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-08-12",
+      "amount": 75,
+      "description": "TopUp Subscription"
+    },
+    {
+      "date": "2023-08-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-07-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-06-07",
+      "amount": 75,
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2022-10-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-09-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-08-08",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-07-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-06-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-05-09",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-04-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-03-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-02-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2022-01-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-12-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-11-08",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-10-14",
+      "amount": 150,
+      "description": "TopUp Subscription Dr F Ljungberg"
+    },
+    {
+      "date": "2021-10-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-09-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-08-09",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-07-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-06-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-05-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-04-07",
+      "amount": 50,
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
+    },
+    {
+      "date": "2021-04-04",
+      "amount": 300,
+      "description": "TopUp Subscription Dr F Ljungberg"
+    },
+    {
+      "date": "2021-03-27",
+      "amount": 225,
+      "description": "TopUp Subscription Dr F Ljungberg"
+    },
+    {
+      "date": "2021-03-14",
+      "amount": 50,
+      "description": "Opening Subscription Dr F Ljungberg"
+    }
+  ],
+  "currency": "GBP",
+  "savedAt": "2026-05-31T16:54:05.534Z"
+}

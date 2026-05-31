@@ -81,12 +81,13 @@ function AnnualTooltip({ active, payload, label }) {
   )
 }
 
-export default function PerformanceChart({ transactions }) {
-  const [period, setPeriod]   = useState('ALL')
-  const [view, setView]       = useState('annual')
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState(null)
+export default function PerformanceChart({ transactions, deposits = [] }) {
+  const [period, setPeriod]       = useState('ALL')
+  const [view, setView]           = useState('annual')
+  const [data, setData]           = useState(null)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
+  const [selectedYear, setSelectedYear] = useState(null)
 
   const loadPerformance = useCallback(async (p) => {
     setLoading(true)
@@ -95,7 +96,7 @@ export default function PerformanceChart({ transactions }) {
       const res = await fetch('/api/portfolio/performance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions, period: p }),
+        body: JSON.stringify({ transactions, period: p, deposits }),
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error || 'Failed to load')
@@ -105,7 +106,7 @@ export default function PerformanceChart({ transactions }) {
     } finally {
       setLoading(false)
     }
-  }, [transactions])
+  }, [transactions, deposits])
 
   useEffect(() => {
     if (transactions?.length) loadPerformance(period)
@@ -180,7 +181,12 @@ export default function PerformanceChart({ transactions }) {
         {/* By Year — grouped bar chart */}
         {!loading && view === 'annual' && hasAnnual && (
           <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={annualReturns} margin={{ top: 8, right: 16, left: 0, bottom: 0 }} barCategoryGap="28%">
+            <BarChart data={annualReturns} margin={{ top: 8, right: 16, left: 0, bottom: 0 }} barCategoryGap="28%"
+              style={{ cursor: 'pointer' }}
+              onClick={e => {
+                const yr = e?.activePayload?.[0]?.payload
+                if (yr) setSelectedYear(prev => prev?.year === yr.year ? null : yr)
+              }}
               <XAxis dataKey="label"
                 tick={{ fill: 'var(--text-3)', fontSize: 11, fontFamily: 'var(--font-mono)' }}
                 axisLine={{ stroke: 'var(--border)' }} tickLine={false} />
@@ -245,6 +251,46 @@ export default function PerformanceChart({ transactions }) {
       {/* Footnote for partial years */}
       {view === 'annual' && hasAnnual && annualReturns.some(r => r.partial) && (
         <p className="chart-footnote">* Partial year — return measured from first/last available data point</p>
+      )}
+
+      {view === 'annual' && selectedYear && (
+        <div className="year-detail">
+          <div className="year-detail-header">
+            <span className="year-detail-title">{selectedYear.year}{selectedYear.partial ? '*' : ''} breakdown</span>
+            <button className="year-detail-close" onClick={() => setSelectedYear(null)}>✕</button>
+          </div>
+          <div className="year-detail-cols">
+            {selectedYear.topHoldings?.length > 0 && (
+              <div className="year-detail-group">
+                <p className="year-detail-label">Best performers</p>
+                {selectedYear.topHoldings.map(h => (
+                  <div key={h.ticker} className="year-detail-row">
+                    <span className="ticker">{h.ticker}</span>
+                    <span className={h.return >= 0 ? 'positive' : 'negative'}>
+                      {h.return >= 0 ? '+' : ''}{h.return}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {selectedYear.bottomHoldings?.length > 0 && (
+              <div className="year-detail-group">
+                <p className="year-detail-label">Worst performers</p>
+                {selectedYear.bottomHoldings.map(h => (
+                  <div key={h.ticker} className="year-detail-row">
+                    <span className="ticker">{h.ticker}</span>
+                    <span className={h.return >= 0 ? 'positive' : 'negative'}>
+                      {h.return >= 0 ? '+' : ''}{h.return}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {!selectedYear.topHoldings?.length && !selectedYear.bottomHoldings?.length && (
+              <p className="year-detail-empty">No price data available for this year</p>
+            )}
+          </div>
+        </div>
       )}
     </article>
   )
