@@ -46,6 +46,19 @@ async function safeQuote(ticker) {
   }
 }
 
+async function fetchTickerDividends(ticker, fromStr, toStr) {
+  try {
+    const result = await yahooFinance.chart(
+      ticker,
+      { period1: fromStr, period2: toStr, events: 'dividends' },
+      { validateResult: false },
+    );
+    return result?.events?.dividends || [];
+  } catch {
+    return [];
+  }
+}
+
 async function safePriceOnDate(ticker, dateStr) {
   try {
     const from = new Date(dateStr);
@@ -141,16 +154,74 @@ async function analysePortfolio(transactions, dividends = []) {
   // ── 3. Fetch historical FX rates (GBPUSD, GBPEUR) ────────
   const hasUsd = transactions.some(t => t.currency === 'USD');
   const hasEur = transactions.some(t => t.currency === 'EUR');
+  const hasChf = transactions.some(t => t.currency === 'CHF');
 
-  const [gbpUsdHistory, gbpEurHistory, currentGbpUsd, currentGbpEur] = await Promise.all([
+  const [gbpUsdHistory, gbpEurHistory, gbpChfHistory, currentGbpUsd, currentGbpEur] = await Promise.all([
     hasUsd ? fetchFxHistory('GBPUSD=X', firstTradeDate, today) : Promise.resolve({}),
     hasEur ? fetchFxHistory('GBPEUR=X', firstTradeDate, today) : Promise.resolve({}),
+    hasChf ? fetchFxHistory('GBPCHF=X', firstTradeDate, today) : Promise.resolve({}),
     safeQuote('GBPUSD=X'),
     safeQuote('GBPEUR=X'),
   ]);
 
   const liveGbpUsd = currentGbpUsd?.regularMarketPrice ?? 1.27;
   const liveGbpEur = currentGbpEur?.regularMarketPrice ?? 1.17;
+
+  // ── 3b. Fetch dividend history for all tickers ───────────
+  const allTickers = [...new Set(sortedTransactions.map(t => t.ticker))];
+  const tickerCurrency = {};
+  for (const tx of sortedTransactions) {
+    if (!tickerCurrency[tx.ticker]) tickerCurrency[tx.ticker] = tx.currency || 'GBP';
+  }
+
+  const divResults = await Promise.all(
+    allTickers.map(ticker => fetchTickerDividends(ticker, firstTradeDate, today))
+  );
+
+  const tickerDivMap = {};
+  allTickers.forEach((ticker, i) => { tickerDivMap[ticker] = divResults[i]; });
+
+  // Build dividend cash flows in GBP
+  let totalDividendsGbp = 0;
+  const dividendCashflows = [];
+
+  for (const ticker of allTickers) {
+    const divs = tickerDivMap[ticker];
+    if (!divs.length) continue;
+    const cur = tickerCurrency[ticker];
+
+    for (const div of divs) {
+      const divDate = div.date.toISOString().slice(0, 10);
+
+      // Shares held on this ex-div date
+      let sharesHeld = 0;
+      for (const tx of sortedTransactions) {
+        if (tx.ticker === ticker && tx.date <= divDate)
+          sharesHeld += tx.action === 'BUY' ? tx.shares : -tx.shares;
+      }
+      if (sharesHeld <= 0.0001) continue;
+
+      // Convert dividend per share → GBP
+      let divGbp;
+      if (ticker.endsWith('.L')) {
+        divGbp = (div.amount / 100) * sharesHeld;           // GBp → GBP
+      } else if (cur === 'USD') {
+        const rate = closestFxRate(gbpUsdHistory, divDate) || liveGbpUsd;
+        divGbp = (div.amount / rate) * sharesHeld;
+      } else if (cur === 'EUR') {
+        const rate = closestFxRate(gbpEurHistory, divDate) || liveGbpEur;
+        divGbp = (div.amount / rate) * sharesHeld;
+      } else if (cur === 'CHF') {
+        const rate = closestFxRate(gbpChfHistory, divDate) || 1.12;
+        divGbp = (div.amount / rate) * sharesHeld;
+      } else {
+        divGbp = div.amount * sharesHeld;
+      }
+
+      totalDividendsGbp += divGbp;
+      dividendCashflows.push({ amount: divGbp, date: new Date(divDate + 'T00:00:00Z') });
+    }
+  }
 
   // ── 4. Enrich transactions with native (USD/EUR) price ───
   const enrichedTransactions = transactions.map(tx => {
@@ -233,10 +304,7 @@ async function analysePortfolio(transactions, dividends = []) {
       amount: tx.action === 'BUY' ? -tx.total : tx.total,
       date:   new Date(tx.date + 'T00:00:00Z'),
     })),
-    ...dividends.map(div => ({
-      amount: div.amount,          // positive — income received
-      date:   new Date(div.date + 'T00:00:00Z'),
-    })),
+    ...dividendCashflows,
   ].sort((a, b) => a.date - b.date);
 
   if (totalCurrentValueGbp > 0) {
@@ -288,7 +356,7 @@ async function analysePortfolio(transactions, dividends = []) {
     });
   }
 
-  const totalGainLossGbp = totalCurrentValueGbp + totalSaleProceedsGbp - totalBuyGbp;
+  const totalGainLossGbp = totalCurrentValueGbp + totalSaleProceedsGbp + totalDividendsGbp - totalBuyGbp;
 
   return {
     holdings: enrichedHoldings,
@@ -301,6 +369,7 @@ async function analysePortfolio(transactions, dividends = []) {
         ? parseFloat((totalGainLossGbp / totalBuyGbp * 100).toFixed(2))
         : 0,
       realizedGainLossGbp: parseFloat(realizedGainLossGbp.toFixed(2)),
+      totalDividendsGbp:   parseFloat(totalDividendsGbp.toFixed(2)),
       portfolioMwrr,
       portfolioMwrrPct,
       years: parseFloat(years.toFixed(2)),

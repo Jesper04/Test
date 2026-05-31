@@ -225,7 +225,7 @@ export default function App() {
         {
           label:    'Total Gain / Loss',
           value:    fmt(analysis.metrics.gainLossGbp),
-          change:   `${analysis.metrics.gainLossPct >= 0 ? '+' : ''}${analysis.metrics.gainLossPct.toFixed(2)}% · ${analysis.metrics.realizedGainLossGbp >= 0 ? '+' : ''}${fmt(analysis.metrics.realizedGainLossGbp)} realized`,
+          change:   `${analysis.metrics.gainLossPct >= 0 ? '+' : ''}${analysis.metrics.gainLossPct.toFixed(2)}% · ${fmt(analysis.metrics.totalDividendsGbp)} dividends`,
           positive: analysis.metrics.gainLossGbp >= 0,
         },
       ]
