@@ -186,7 +186,7 @@ export default function PerformanceChart({ transactions, deposits = [] }) {
               onClick={e => {
                 const yr = e?.activePayload?.[0]?.payload
                 if (yr) setSelectedYear(prev => prev?.year === yr.year ? null : yr)
-              }}
+              }}>
               <XAxis dataKey="label"
                 tick={{ fill: 'var(--text-3)', fontSize: 11, fontFamily: 'var(--font-mono)' }}
                 axisLine={{ stroke: 'var(--border)' }} tickLine={false} />

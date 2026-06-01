@@ -99,11 +99,12 @@ const RESPONSE_SCHEMA = {
       items: {
         type: 'object',
         properties: {
+          ticker:      { type: 'string', description: 'Ticker symbol of the stock that paid this dividend' },
           date:        { type: 'string', description: 'YYYY-MM-DD' },
           amount:      { type: 'number', description: 'Dividend amount in GBP (always positive)' },
           description: { type: 'string' },
         },
-        required: ['date', 'amount', 'description'],
+        required: ['ticker', 'date', 'amount', 'description'],
         additionalProperties: false,
       },
     },
@@ -200,7 +201,44 @@ async function parseCsvWithAI(csvContent) {
   const toolUse = response.content.find((b) => b.type === 'tool_use');
   if (!toolUse) throw new Error('No tool_use block in AI response');
 
-  return toolUse.input;
+  return normaliseTickers(toolUse.input);
+}
+
+// Maps wrong/full-name tickers the LLM occasionally returns → correct Yahoo Finance symbols.
+// Add entries here whenever a new misidentification is spotted in the debug output.
+const TICKER_CORRECTIONS = {
+  'STARBUCKS':   'SBUX',
+  'BERKSHIRE':   'BRK-B',
+  'BERKSHIREB':  'BRK-B',
+  'UNDERARMOUR': 'UA',
+  'HERSHEY':     'HSY',
+  'NIKE':        'NKE',
+};
+
+function normaliseTickers(parsed) {
+  const fix = ticker => TICKER_CORRECTIONS[ticker?.toUpperCase()] ?? ticker;
+
+  if (Array.isArray(parsed.transactions)) {
+    for (const tx of parsed.transactions) {
+      const corrected = fix(tx.ticker);
+      if (corrected !== tx.ticker) {
+        console.log(`[TICKER FIX] "${tx.ticker}" → "${corrected}"`);
+        tx.ticker = corrected;
+      }
+    }
+  }
+
+  if (Array.isArray(parsed.dividends)) {
+    for (const div of parsed.dividends) {
+      const corrected = fix(div.ticker);
+      if (corrected !== div.ticker) {
+        console.log(`[TICKER FIX] dividend "${div.ticker}" → "${corrected}"`);
+        div.ticker = corrected;
+      }
+    }
+  }
+
+  return parsed;
 }
 
 module.exports = { parseCsvWithAI, extractDeposits };

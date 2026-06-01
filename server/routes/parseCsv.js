@@ -48,11 +48,13 @@ router.post('/', upload.single('file'), async (req, res) => {
 
   try {
     const result = await parseCsvWithAI(csvContent);
-    result.deposits = extractDeposits(csvContent);
+    if (!result.deposits || result.deposits.length === 0) {
+      result.deposits = extractDeposits(csvContent);
+    }
     store.save({ transactions: result.transactions, dividends: result.dividends, deposits: result.deposits, currency: result.currency });
     return res.status(200).json({ success: true, ...result });
   } catch (err) {
-    console.error('CSV AI parse error:', err.message);
+    console.error('[CSV PARSE ERROR]', err.stack || err);
     return res.status(500).json({ error: 'Failed to parse CSV', detail: err.message });
   }
 });

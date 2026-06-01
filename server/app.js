@@ -23,11 +23,20 @@ app.use('/api/cagr/ticker', cagrTickerRouter);
 app.use('/api/parse-csv', parseCsvRouter);
 app.use('/api/portfolio', portfolioRouter);
 
-// Global JSON error handler for unexpected failures
+// Express error middleware — catches errors passed via next(err)
 app.use((err, _req, res, _next) => {
-  console.error('Unhandled server error:', err);
+  console.error('[EXPRESS ERROR]', err.stack || err);
   if (res.headersSent) return;
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+});
+
+// Process-level safety nets — catch anything that escapes route handlers
+process.on('unhandledRejection', (reason) => {
+  console.error('[UNHANDLED REJECTION]', reason?.stack || reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err.stack || err);
 });
 
 module.exports = app;
