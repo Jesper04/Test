@@ -339,6 +339,10 @@ async function analysePortfolio(transactions, dividends = []) {
   const years = (new Date(today) - new Date(firstTradeDate)) / (MS_PER_DAY * DAYS_PER_YEAR);
   let portfolioMwrr = null, portfolioMwrrPct = null;
 
+  console.log('[XIRR DEBUG] transactions:', JSON.stringify(sortedTransactions.map(t => ({
+    date: t.date, action: t.action, ticker: t.ticker, total: t.total
+  })), null, 2));
+
   const cashflows = [
     ...sortedTransactions.map(tx => ({
       amount: tx.action === 'BUY' ? -tx.total : tx.total,

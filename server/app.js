@@ -30,13 +30,5 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
-// Process-level safety nets — catch anything that escapes route handlers
-process.on('unhandledRejection', (reason) => {
-  console.error('[UNHANDLED REJECTION]', reason?.stack || reason);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('[UNCAUGHT EXCEPTION]', err.stack || err);
-});
 
 module.exports = app;

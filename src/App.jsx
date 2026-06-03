@@ -102,9 +102,12 @@ export default function App() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ transactions: data.transactions, dividends: data.dividends || [] }),
         })
-          .then(r => r.json())
-          .then(a => { setAnalysis(a); setStatus('done') })
-          .catch(() => setStatus('done'))
+          .then(r => r.json().then(a => ({ ok: r.ok, a })))
+          .then(({ ok, a }) => {
+            if (!ok) { console.error('[ANALYSE] Server error:', a); setStatus('done'); return; }
+            setAnalysis(a); setStatus('done');
+          })
+          .catch(err => { console.error('[ANALYSE] Fetch error:', err); setStatus('done'); })
       })
       .catch(() => {})
   }, [])

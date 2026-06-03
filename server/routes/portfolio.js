@@ -13,11 +13,13 @@ router.post('/analyse', async (req, res) => {
     return res.status(400).json({ error: 'transactions array is required', field: 'transactions' });
   }
 
+  console.log('[ANALYSE] Starting for', transactions.length, 'transactions,', dividends.length, 'dividends');
   try {
     const result = await analysePortfolio(transactions, dividends);
+    console.log('[ANALYSE] Done. Holdings:', result.holdings?.length, 'MWRR:', result.metrics?.portfolioMwrrPct);
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Portfolio analyse error:', err.message);
+    console.error('[ANALYSE] Error:', err.stack || err.message);
     return res.status(500).json({ error: 'Failed to analyse portfolio', detail: err.message });
   }
 });

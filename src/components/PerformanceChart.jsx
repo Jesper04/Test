@@ -98,7 +98,9 @@ export default function PerformanceChart({ transactions, deposits = [] }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactions, period: p, deposits }),
       })
-      const json = await res.json()
+      const text = await res.text()
+      if (!text) throw new Error('No response from server — is the backend running?')
+      const json = JSON.parse(text)
       if (!res.ok) throw new Error(json.error || 'Failed to load')
       setData(json)
     } catch (err) {

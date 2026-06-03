@@ -127,8 +127,8 @@
       "pricePerShare": 237.55,
       "total": 1187.75,
       "action": "SELL",
-      "currency": "GBP",
-      "currencySymbol": "£"
+      "currency": "USD",
+      "currencySymbol": "$"
     },
     {
       "ticker": "HHH",
@@ -367,8 +367,8 @@
       "pricePerShare": 128.86,
       "total": 1932.9,
       "action": "BUY",
-      "currency": "GBP",
-      "currencySymbol": "£"
+      "currency": "USD",
+      "currencySymbol": "$"
     },
     {
       "ticker": "VUSA",
@@ -435,7 +435,7 @@
       "date": "2024-11-25",
       "shares": 41,
       "pricePerShare": 18.75,
-      "total": 768.75,
+      "total": 769,
       "action": "BUY",
       "currency": "EUR",
       "currencySymbol": "€"
@@ -515,7 +515,7 @@
       "date": "2024-08-09",
       "shares": 9,
       "pricePerShare": 60.89,
-      "total": 548.01,
+      "total": 547.01,
       "action": "BUY",
       "currency": "GBP",
       "currencySymbol": "£"
@@ -571,6 +571,36 @@
       "currencySymbol": "€"
     },
     {
+      "ticker": "SBUX",
+      "date": "2024-04-09",
+      "shares": 7,
+      "pricePerShare": 68.54,
+      "total": 479.78,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "NKE",
+      "date": "2024-04-09",
+      "shares": 6,
+      "pricePerShare": 71.12,
+      "total": 426.72,
+      "action": "BUY",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
+      "ticker": "HSY",
+      "date": "2024-04-09",
+      "shares": 2,
+      "pricePerShare": 151.85,
+      "total": 303.7,
+      "action": "SELL",
+      "currency": "USD",
+      "currencySymbol": "$"
+    },
+    {
       "ticker": "BGEO.L",
       "date": "2024-03-11",
       "shares": 11,
@@ -579,16 +609,6 @@
       "action": "SELL",
       "currency": "GBP",
       "currencySymbol": "£"
-    },
-    {
-      "ticker": "SBUX",
-      "date": "2024-04-09",
-      "shares": 7,
-      "pricePerShare": 70.93,
-      "total": 496.54,
-      "action": "BUY",
-      "currency": "USD",
-      "currencySymbol": "$"
     },
     {
       "ticker": "UMG.AS",
@@ -604,9 +624,9 @@
       "ticker": "CLIQ.DE",
       "date": "2024-02-20",
       "shares": 14,
-      "pricePerShare": 16.68,
-      "total": 233.52,
-      "action": "BUY",
+      "pricePerShare": 16.59,
+      "total": 232.26,
+      "action": "SELL",
       "currency": "EUR",
       "currencySymbol": "€"
     },
@@ -614,9 +634,9 @@
       "ticker": "CLIQ.DE",
       "date": "2024-02-20",
       "shares": 14,
-      "pricePerShare": 16.59,
-      "total": 232.26,
-      "action": "SELL",
+      "pricePerShare": 16.68,
+      "total": 233.52,
+      "action": "BUY",
       "currency": "EUR",
       "currencySymbol": "€"
     },
@@ -695,7 +715,7 @@
       "date": "2023-05-16",
       "shares": 311,
       "pricePerShare": 1.12,
-      "total": 348.92,
+      "total": 348.32,
       "action": "BUY",
       "currency": "GBP",
       "currencySymbol": "£"
@@ -804,9 +824,9 @@
       "description": "TopUp Subscription"
     },
     {
-      "date": "2024-12-28",
-      "amount": 3000,
-      "description": "TopUp Subscription"
+      "date": "2024-10-18",
+      "amount": -50,
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
       "date": "2024-09-27",
@@ -814,9 +834,9 @@
       "description": "TopUp Subscription"
     },
     {
-      "date": "2024-09-05",
+      "date": "2024-09-09",
       "amount": -50,
-      "description": "Payment to Client Bank"
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
       "date": "2024-08-23",
@@ -829,6 +849,11 @@
       "description": "TopUp Subscription"
     },
     {
+      "date": "2024-08-05",
+      "amount": -50,
+      "description": "Payment to Client Bank A/C:609534/******73"
+    },
+    {
       "date": "2024-07-25",
       "amount": 250,
       "description": "TopUp Subscription"
@@ -836,77 +861,82 @@
     {
       "date": "2024-07-24",
       "amount": -30,
-      "description": "Payment to Client Bank"
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
       "date": "2024-07-22",
       "amount": -75,
-      "description": "Payment to Client Bank"
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
-      "date": "2024-07-01",
+      "date": "2024-06-29",
       "amount": 2600,
       "description": "TopUp Subscription"
     },
     {
-      "date": "2024-07-01",
+      "date": "2024-06-28",
       "amount": 7000,
       "description": "TopUp Subscription"
     },
     {
       "date": "2024-06-17",
       "amount": -20,
-      "description": "Payment to Client Bank"
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
       "date": "2024-06-10",
       "amount": -20,
-      "description": "Payment to Client Bank"
+      "description": "Payment to Client Bank A/C:609534/******73"
     },
     {
       "date": "2024-05-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2024-04-08",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2024-03-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2024-02-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2024-01-08",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
+    },
+    {
+      "date": "2023-12-28",
+      "amount": 3000,
+      "description": "TopUp Subscription"
     },
     {
       "date": "2023-12-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-11-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-10-09",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-09-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-08-12",
@@ -916,144 +946,134 @@
     {
       "date": "2023-08-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-07-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2023-06-07",
       "amount": 75,
-      "description": "Transfer From Bank Account"
-    },
-    {
-      "date": "2023-05-02",
-      "amount": 0,
-      "description": "Transfer From Bank Account"
-    },
-    {
-      "date": "2023-04-02",
-      "amount": 0,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****4673"
     },
     {
       "date": "2022-10-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-09-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-08-08",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-07-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-06-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-05-09",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-04-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-03-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-02-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2022-01-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-12-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-11-08",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-10-14",
       "amount": 150,
-      "description": "TopUp Subscription"
+      "description": "TopUp Subscription Dr F Ljungberg"
     },
     {
       "date": "2021-10-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-09-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-08-09",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-07-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-06-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-05-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-04-07",
       "amount": 50,
-      "description": "Transfer From Bank Account"
+      "description": "Transfer From Bank Account Bank A/C : ****9943"
     },
     {
       "date": "2021-04-04",
       "amount": 300,
-      "description": "TopUp Subscription"
+      "description": "TopUp Subscription Dr F Ljungberg"
     },
     {
       "date": "2021-03-27",
       "amount": 225,
-      "description": "TopUp Subscription"
+      "description": "TopUp Subscription Dr F Ljungberg"
     },
     {
       "date": "2021-03-14",
       "amount": 50,
-      "description": "Opening Subscription"
+      "description": "Opening Subscription Dr F Ljungberg"
     }
   ],
   "currency": "GBP",
-  "savedAt": "2026-06-01T20:39:50.671Z"
+  "savedAt": "2026-06-03T21:39:29.825Z"
 }
